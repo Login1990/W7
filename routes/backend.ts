@@ -13,6 +13,19 @@ let users: {[key: string]: User}= {}
 
 let user_id : number = 0
 
+function getAllValues(obj: any) {
+    const values = [];
+  
+    // Iterate through each key in the object
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        // Add the value to the values array
+        values.push(obj[key]);
+      }
+    }
+  
+    return values;
+  }
 
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
     res.send("Hello from TS!")
@@ -36,6 +49,12 @@ router.post("/api/user/register", (req: Request, res: Response, next: NextFuncti
             })
         })
     }
+})
+
+router.get("/api/user/list", (req: Request, res: Response, next: NextFunction) => {
+    let obj = getAllValues(users)
+    console.log(obj)
+    res.send(obj)
 })
 
 export default router
