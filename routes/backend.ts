@@ -1,5 +1,6 @@
 import express, {Express, NextFunction, Router, Request, Response} from "express"
-import bycript, {genSalt, hash} from "bcryptjs"
+import bycript, {genSalt, hash, compare} from "bcryptjs"
+import cookieParser from "cookie-parser"
 
 const router = Router()
 
@@ -53,8 +54,25 @@ router.post("/api/user/register", (req: Request, res: Response, next: NextFuncti
 
 router.get("/api/user/list", (req: Request, res: Response, next: NextFunction) => {
     let obj = getAllValues(users)
-    console.log(obj)
     res.send(obj)
+})
+
+router.post("/api/user/login", (req: Request, res: Response, next: NextFunction) => {
+    if(!(users.hasOwnProperty(req.body.username))){
+        return res.status(401).send("Username doesn't exist")
+    } else {
+        bycript.compare(req.body.password, users[req.body.username].password, (err, isMatch) => {
+            if(err){
+                res.status(401).send("Incorrect password")
+            }
+            if(isMatch){
+                res.cookie("connect.sid", users[req.body.username].password)
+                res.status(200).send("Logged in")
+            } else {
+                res.status(401).send("Incorrect credentials")
+            }
+        })
+    }    
 })
 
 export default router
