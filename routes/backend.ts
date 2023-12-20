@@ -75,4 +75,12 @@ router.post("/api/user/login", (req: Request, res: Response, next: NextFunction)
     }    
 })
 
+router.get("/api/secret", (req: Request, res: Response, next: NextFunction) => {
+    if(req.cookies["connect.sid"]){
+        res.status(200).send("Secret access given")
+    } else {
+        res.status(401).send("Secret denied")
+    }
+})
+
 export default router
