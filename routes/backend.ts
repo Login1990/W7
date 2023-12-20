@@ -33,6 +33,9 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post("/api/user/register", (req: Request, res: Response, next: NextFunction) => {
+    if(req.cookies["connect.sid"]){
+        return res.redirect('/')
+    }
     if(users.hasOwnProperty(req.body.username)){
         return res.status(400).send("Username already used")
     } else {
@@ -58,6 +61,9 @@ router.get("/api/user/list", (req: Request, res: Response, next: NextFunction) =
 })
 
 router.post("/api/user/login", (req: Request, res: Response, next: NextFunction) => {
+    if(req.cookies["connect.sid"]){
+        return res.redirect('/')
+    }
     if(!(users.hasOwnProperty(req.body.username))){
         return res.status(401).send("Username doesn't exist")
     } else {
@@ -82,5 +88,7 @@ router.get("/api/secret", (req: Request, res: Response, next: NextFunction) => {
         res.status(401).send("Secret denied")
     }
 })
+
+
 
 export default router
